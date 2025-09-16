@@ -12,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import type { BookmarkWithCategory } from "@/lib/types/bookmark";
 
 interface DeleteBookmarkDialogProps {

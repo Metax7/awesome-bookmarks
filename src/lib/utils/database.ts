@@ -1,4 +1,5 @@
 import { prisma } from "../db/prisma";
+import type { Prisma } from "@prisma/client";
 import {
   BookmarkCreateInput,
   BookmarkUpdateInput,
@@ -61,10 +62,13 @@ export class BookmarkUtils {
 
   // Update bookmark
   static async update(id: string, data: BookmarkUpdateInput) {
-    const updateData: any = {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
-      ...data,
-      ...(data.tags !== undefined && { tags: JSON.stringify(data.tags) }),
+    const updateData: Prisma.BookmarkUncheckedUpdateInput = {
+      ...(data.title !== undefined && { title: data.title }),
+      ...(data.url !== undefined && { url: data.url }),
+      ...(data.description !== undefined && { description: data.description }),
+      ...(data.categoryId !== undefined && { categoryId: data.categoryId }),
+      ...(data.favicon !== undefined && { favicon: data.favicon }),
+      ...(data.tags !== undefined && { tags: JSON.stringify(data.tags ?? []) }),
     };
 
     const bookmark = await prisma.bookmark.update({
