@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import type { CategoryWithBookmarkCount } from "@/lib/types/bookmark";
+import SettingsDropdown from "./settings-dropdown";
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -155,9 +156,13 @@ export function MobileLayout({
             </div>
           </div>
 
-          <Button onClick={onAddBookmark} size="sm">
-            <Plus className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={onAddBookmark} size="sm">
+              <Plus className="h-4 w-4" />
+            </Button>
+            <SettingsDropdown />
+
+          </div>
         </div>
       </header>
 
