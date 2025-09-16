@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/dashboard";
-import { BookmarkFormDialog } from "@/components/forms";
+import { BookmarkFormDialog, CategoryFormDialog } from "@/components/forms";
 import { DeleteBookmarkDialog } from "@/components/dashboard/delete-bookmark-dialog";
 import { NetworkErrorFallback } from "@/components/error";
 import { useBookmarkStore } from "@/lib/stores/bookmark-store";
@@ -12,6 +12,7 @@ import { useBookmarkErrorHandler } from "@/lib/hooks/use-error-handler";
 import { ToastManager } from "@/lib/utils/toast-utils";
 import type {
   BookmarkWithCategory,
+  Category,
   CategoryWithBookmarkCount,
 } from "@/lib/types/bookmark";
 
@@ -20,10 +21,12 @@ export default function Home() {
   const [editingBookmark, setEditingBookmark] = useState<
     BookmarkWithCategory | undefined
   >();
-  const [deletingBookmark, setDeletingBookmark] = useState<
-    BookmarkWithCategory | null
-  >(null);
+  const [deletingBookmark, setDeletingBookmark] =
+    useState<BookmarkWithCategory | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const {
     bookmarks,
@@ -40,7 +43,8 @@ export default function Home() {
   } = useCategoryStore();
 
   const { fetchAvailableTags } = useSearchStore();
-  const { executeBookmarkOperation, error: bookmarkError } = useBookmarkErrorHandler();
+  const { executeBookmarkOperation, error: bookmarkError } =
+    useBookmarkErrorHandler();
 
   // Initialize data on mount
   useEffect(() => {
@@ -51,9 +55,9 @@ export default function Home() {
 
         // Then fetch categories, bookmarks, and available tags
         await Promise.all([
-          fetchCategories(), 
+          fetchCategories(),
           fetchBookmarks(),
-          fetchAvailableTags()
+          fetchAvailableTags(),
         ]);
 
         setIsInitialized(true);
@@ -75,7 +79,7 @@ export default function Home() {
   };
 
   const handleDeleteBookmark = (id: string) => {
-    const bookmark = bookmarks.find(b => b.id === id);
+    const bookmark = bookmarks.find((b) => b.id === id);
     if (bookmark) {
       setDeletingBookmark(bookmark);
     }
@@ -83,16 +87,16 @@ export default function Home() {
 
   const handleConfirmDelete = async (id: string) => {
     // Optimistic update - remove bookmark from UI immediately
-    const optimisticBookmarks = bookmarks.filter(b => b.id !== id);
+    const optimisticBookmarks = bookmarks.filter((b) => b.id !== id);
     useBookmarkStore.setState({ bookmarks: optimisticBookmarks });
-    
+
     const result = await executeBookmarkOperation(async () => {
       await deleteBookmark(id);
       await fetchCategories();
-    }, 'delete');
-    
+    }, "delete");
+
     if (result) {
-      ToastManager.success("Закладка удалена");
+      ToastManager.success("Bookmark deleted");
     } else {
       // Revert optimistic update on error
       await fetchBookmarks();
@@ -100,35 +104,43 @@ export default function Home() {
   };
 
   const handleAddCategory = () => {
-    // Category management is now handled directly in the sidebar
-    // This function is kept for compatibility but not used
+    setEditingCategory(null);
+    setShowCategoryForm(true);
   };
 
-  const handleCategoryChange = async (bookmarkId: string, categoryId: string) => {
-    const targetCategory = categories.find(c => c.id === categoryId);
-    
+  const handleCategoryFormSuccess = () => {
+    setShowCategoryForm(false);
+    setEditingCategory(null);
+  };
+
+  const handleCategoryChange = async (
+    bookmarkId: string,
+    categoryId: string
+  ) => {
+    const targetCategory = categories.find((c) => c.id === categoryId);
+
     if (targetCategory) {
       // Optimistic update - update bookmark category in UI immediately
-      const optimisticBookmarks = bookmarks.map(bookmark => 
-        bookmark.id === bookmarkId 
-          ? { 
-              ...bookmark, 
-              categoryId, 
+      const optimisticBookmarks = bookmarks.map((bookmark) =>
+        bookmark.id === bookmarkId
+          ? {
+              ...bookmark,
+              categoryId,
               category: {
                 ...targetCategory,
-                icon: targetCategory.icon || null
-              }
+                icon: targetCategory.icon || null,
+              },
             }
           : bookmark
       );
-      
+
       useBookmarkStore.setState({ bookmarks: optimisticBookmarks });
-      
+
       const result = await executeBookmarkOperation(async () => {
         await changeBookmarkCategory(bookmarkId, categoryId);
         await fetchCategories();
-      }, 'update');
-      
+      }, "update");
+
       if (result) {
         ToastManager.success("Закладка перемещена");
       } else {
@@ -153,7 +165,7 @@ export default function Home() {
   if (bookmarkError && !navigator.onLine) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <NetworkErrorFallback 
+        <NetworkErrorFallback
           onRetry={() => window.location.reload()}
           showOfflineIndicator={true}
         />
@@ -193,6 +205,13 @@ export default function Home() {
       <BookmarkFormDialog
         open={isAddBookmarkOpen}
         onOpenChange={setIsAddBookmarkOpen}
+      />
+
+      <CategoryFormDialog
+        open={showCategoryForm}
+        onOpenChange={setShowCategoryForm}
+        category={editingCategory || undefined}
+        onSuccess={handleCategoryFormSuccess}
       />
 
       {/* Edit Bookmark Dialog */}

@@ -58,7 +58,7 @@ export function CategoryFormDialog({
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[70vh] overflow-y-auto rounded-t-lg">
+        <SheetContent side="bottom" className="h-[70vh] p-6 overflow-y-auto rounded-t-lg">
           <SheetHeader className="text-left">
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
