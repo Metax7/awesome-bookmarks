@@ -17,6 +17,7 @@ export const bookmarkSchema = z.object({
     .array(z.string().min(1).max(50))
     .max(10, "Maximum 10 tags")
     .optional(),
+  favicon: z.string().optional().nullable(),
 });
 
 // Category validation schema

@@ -55,6 +55,7 @@ export function BookmarkForm({
 }: BookmarkFormProps) {
   const [isExtractingMetadata, setIsExtractingMetadata] = useState(false);
   const [tagInput, setTagInput] = useState("");
+  const [favicon, setFavicon] = useState<string | undefined>(bookmark?.favicon ?? undefined);
 
   const { createBookmark, updateBookmark, isLoading } = useBookmarkStore();
   const {
@@ -120,6 +121,11 @@ export function BookmarkForm({
         if (metadata.description && !getValues("description")) {
           setValue("description", metadata.description);
         }
+
+        // Always capture the favicon
+        if (metadata.favicon) {
+          setFavicon(metadata.favicon);
+        }
       } catch {
         // Invalid URL, don't extract metadata
       } finally {
@@ -165,6 +171,7 @@ export function BookmarkForm({
         title: data.title || "Untitled",
         description: data.description || undefined,
         tags: data.tags || [],
+        favicon: favicon || undefined,
       };
 
       if (bookmark) {

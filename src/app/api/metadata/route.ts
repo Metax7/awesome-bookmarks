@@ -8,9 +8,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
   }
 
+  // Validate URL before doing anything else
+  let parsedUrl: URL;
   try {
-    // Validate URL
-    new URL(url);
+    parsedUrl = new URL(url);
+  } catch {
+    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+  }
+
+  try {
 
     // Fetch the page with timeout
     const controller = new AbortController();
@@ -38,9 +44,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching metadata:', error);
     
-    // Return fallback metadata
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname.replace('www.', '');
+    // Return fallback metadata using the already-validated parsedUrl
+    const domain = parsedUrl.hostname.replace('www.', '');
     
     return NextResponse.json({
       title: domain,
@@ -55,7 +60,7 @@ function extractMetadataFromHtml(html: string, url: string): {
   description?: string;
   favicon?: string;
 } {
-  const urlObj = new URL(url);
+  const urlObj = new URL(url); // safe — already validated above
   const domain = urlObj.hostname.replace('www.', '');
   
   // Extract title
@@ -69,8 +74,24 @@ function extractMetadataFromHtml(html: string, url: string): {
   const description = ogDescriptionMatch?.[1] || descriptionMatch?.[1] || `Content from ${domain}`;
 
   // Extract favicon
-  const faviconMatch = html.match(/<link[^>]*rel=["\'][^"']*icon[^"']*["\'][^>]*href=["\']([^"']+)["\'][^>]*>/i);
-  let favicon = faviconMatch?.[1];
+  let favicon = null;
+  
+  // Try to find any link tag with icon or apple-touch-icon
+  const linkTags = html.match(/<link[^>]+>/gi) || [];
+  
+  for (const tag of linkTags) {
+    const relMatch = tag.match(/rel=["\']([^"']+)["\']/i);
+    const rel = relMatch?.[1]?.toLowerCase() || "";
+    
+    if (rel.includes("icon") || rel.includes("apple-touch-icon")) {
+      const hrefMatch = tag.match(/href=["\']([^"']+)["\']/i);
+      if (hrefMatch?.[1]) {
+        favicon = hrefMatch[1];
+        // break; // Keep going to find better ones if needed, but first one is usually fine
+        if (rel.includes("apple-touch-icon")) break; // Priority
+      }
+    }
+  }
   
   if (favicon) {
     // Convert relative URLs to absolute
