@@ -142,7 +142,7 @@ export default function Home() {
       }, "update");
 
       if (result) {
-        ToastManager.success("Закладка перемещена");
+        ToastManager.success("Bookmark moved");
       } else {
         // Revert optimistic update on error
         await fetchBookmarks();

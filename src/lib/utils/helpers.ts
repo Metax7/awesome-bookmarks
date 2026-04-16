@@ -50,7 +50,7 @@ export class TagUtils {
     return tag
       .toLowerCase()
       .trim()
-      .replace(/[^a-zA-Z0-9а-яё\s-]/g, '')
+      .replace(/[^a-zA-Z0-9\s-]/g, '')
       .replace(/\s+/g, '-');
   }
 
@@ -139,7 +139,7 @@ export class ColorUtils {
 export class DateUtils {
   // Format date for display
   static formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('ru-RU', {
+    return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -148,7 +148,7 @@ export class DateUtils {
 
   // Format date and time for display
   static formatDateTime(date: Date): string {
-    return new Intl.DateTimeFormat('ru-RU', {
+    return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

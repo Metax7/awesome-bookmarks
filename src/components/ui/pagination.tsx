@@ -103,7 +103,7 @@ function PaginationPrevious({
       {...props}
     >
       <ChevronLeftIcon className="h-4 w-4" />
-      <span className="hidden sm:block">Назад</span>
+      <span className="hidden sm:block">Back</span>
     </PaginationLink>
   )
 }
@@ -121,7 +121,7 @@ function PaginationNext({
       onClick={onClick}
       {...props}
     >
-      <span className="hidden sm:block">Далее</span>
+      <span className="hidden sm:block">Next</span>
       <ChevronRightIcon className="h-4 w-4" />
     </PaginationLink>
   )

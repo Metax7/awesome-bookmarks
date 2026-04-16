@@ -497,22 +497,22 @@ export const utilityOperations = {
         await prisma.category.createMany({
           data: [
             {
-              name: 'Общие',
+              name: 'General',
               color: '#3B82F6',
               icon: 'bookmark',
             },
             {
-              name: 'Работа',
+              name: 'Work',
               color: '#10B981',
               icon: 'briefcase',
             },
             {
-              name: 'Обучение',
+              name: 'Learning',
               color: '#F59E0B',
               icon: 'graduation-cap',
             },
             {
-              name: 'Развлечения',
+              name: 'Entertainment',
               color: '#EF4444',
               icon: 'gamepad-2',
             },

@@ -191,9 +191,9 @@ export const useCategoryStore = create<CategoryState>()(
         try {
           // Create default categories
           const defaultCategories = [
-            { name: 'Разработка', color: '#3b82f6' },
-            { name: 'Дизайн', color: '#ef4444' },
-            { name: 'Новости', color: '#10b981' },
+            { name: 'Development', color: '#3b82f6' },
+            { name: 'Design', color: '#ef4444' },
+            { name: 'News', color: '#10b981' },
           ];
           
           for (const category of defaultCategories) {

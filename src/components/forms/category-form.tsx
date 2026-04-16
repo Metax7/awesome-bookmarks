@@ -28,7 +28,7 @@ const categorySchema = z.object({
     .min(1, "Category name is required")
     .max(50, "Name must not exceed 50 characters")
     .regex(
-      /^[a-zA-Zа-яА-Я0-9\s\-_]+$/,
+      /^[a-zA-Z0-9\s\-_]+$/,
       "Name can only contain letters, numbers, spaces, hyphens and underscores"
     ),
   color: z.string().regex(/^#[0-9A-F]{6}$/i, "Please select a valid color"),

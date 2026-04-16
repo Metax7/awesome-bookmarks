@@ -35,13 +35,13 @@ export function useErrorHandler() {
     if (showToast) {
       if (retryable) {
         ToastManager.errorWithRetry(
-          error.message || 'Произошла ошибка',
+          error.message || 'An error occurred',
           () => {
             // This will be overridden by the retry function
           }
         );
       } else {
-        ToastManager.error(error.message || 'Произошла ошибка');
+        ToastManager.error(error.message || 'An error occurred');
       }
     }
 
@@ -96,20 +96,20 @@ export function useBookmarkErrorHandler() {
   const { handleError, executeWithErrorHandling, ...rest } = useErrorHandler();
 
   const handleBookmarkError = useCallback((error: Error, operation?: string) => {
-    let message = 'Ошибка при работе с закладкой';
+    let message = 'Error working with bookmark';
     
     switch (operation) {
       case 'create':
-        message = 'Не удалось создать закладку';
+        message = 'Failed to create bookmark';
         break;
       case 'update':
-        message = 'Не удалось обновить закладку';
+        message = 'Failed to update bookmark';
         break;
       case 'delete':
-        message = 'Не удалось удалить закладку';
+        message = 'Failed to delete bookmark';
         break;
       case 'fetch':
-        message = 'Не удалось загрузить закладки';
+        message = 'Failed to load bookmarks';
         break;
     }
 
