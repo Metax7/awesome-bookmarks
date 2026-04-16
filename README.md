@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔖 Awesome Bookmarks
 
-## Getting Started
+A high-performance, modern bookmark management application built with Next.js 15, React 19, and Prisma.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Smart Bookmarking**: Save URLs with automated metadata extraction (titles, descriptions, and favicons).
+- **Organization**: Categorize bookmarks with custom colors and icons.
+- **Advanced Search**: Instant full-text search with filtering by categories, tags, and multiple sorting options.
+- **Performance Optimized**: Virtualized grid for smooth scrolling even with thousands of bookmarks.
+- **Modern UI/UX**: Responsive design using Tailwind CSS 4 and Shadcn UI components.
+- **State Management**: Robust state handling with Zustand and optimistic updates.
+- **Developer Friendly**: Fully type-safe with TypeScript and comprehensive testing suite with Vitest.
+
+## 🚀 Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Runtime**: [React 19](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Database**: [SQLite](https://sqlite.org/) with [Prisma ORM](https://www.prisma.io/)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/), [Shadcn UI](https://ui.shadcn.com/)
+- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Testing**: [Vitest](https://vitest.dev/), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Package Manager**: [Bun](https://bun.sh/)
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) installed on your machine.
+- Node.js 18+ (if not using Bun directly).
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/awesome-bookmarks.git
+   cd awesome-bookmarks
+   ```
+
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+
+3. Environment Setup:
+   Create a `.env` file in the root directory (or copy from `.env.example`):
+   ```bash
+   DATABASE_URL="file:./dev.db"
+   ```
+
+4. Database Setup:
+   Initialize the SQLite database and run migrations:
+   ```bash
+   bunx prisma migrate dev --name init
+   ```
+
+5. Run the development server:
+   ```bash
+   bun dev
+   ```
+
+Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/            # Next.js App Router (pages & API routes)
+├── components/     # UI components (Dashboard, Forms, Layout, UI)
+├── hooks/          # Custom React hooks
+├── lib/            
+│   ├── db/         # Prisma client and database operations
+│   ├── stores/     # Zustand state stores
+│   ├── types/      # TypeScript interfaces/types
+│   └── utils/      # Helper functions and validation logic
+└── public/         # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧪 Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The project uses Vitest for unit and integration testing.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Run all tests
+bun test
 
-## Learn More
+# Run tests in watch mode
+bun run test:watch
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Run tests with UI reporter
+bun run test:ui
